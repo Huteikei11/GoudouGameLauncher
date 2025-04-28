@@ -13,6 +13,9 @@ public class DialogManager : MonoBehaviour
     public Animator animator;
     public AudioSource audioSource;
 
+    private int executionCount = 0; // 実行回数をカウントする変数
+    private int previousNum = -1;  // 前回の num を記録する変数
+
     // 効果音クリップ名 → AudioClip の辞書（Inspectorで登録）
     [System.Serializable]
     public class SoundEntry
@@ -29,7 +32,9 @@ public class DialogManager : MonoBehaviour
     {
         [TextArea(2, 5)]
         public List<string> lines = new List<string>();
+        [TextArea(2, 5)]
         public string news;   // 既存のフィールド
+        [TextArea(2, 5)]
         public string detail; // 新しいフィールド
     }
 
@@ -105,15 +110,30 @@ public class DialogManager : MonoBehaviour
 
     public void SetDialogFromIndex()
     {
-        int index = num;
-        if (index >= 0 && index < dialogTable.Length)
+        // num が前回と異なる場合、実行回数をリセット
+        if (num != previousNum)
         {
-            var lines = dialogTable[index].lines;
+            executionCount = 0;
+            previousNum = num; // 現在の num を記録
+        }
+
+        if (num >= 0 && num < dialogTable.Length)
+        {
+            var lines = dialogTable[num].lines;
             if (lines != null && lines.Count > 0)
             {
-                string randomLine = lines[Random.Range(0, lines.Count)];
-                SetDialog(randomLine);
+                // 実行回数をインデックスとして使用
+                int lineIndex = executionCount % lines.Count; // 実行回数を lines.Count で割った余りを使用
+                string line = lines[lineIndex];
+                SetDialog(line);
+
+                // 実行回数をインクリメント
+                executionCount++;
             }
+        }
+        else
+        {
+            Debug.LogWarning("num の値が dialogTable の範囲外です。");
         }
     }
 
@@ -174,6 +194,8 @@ public class DialogManager : MonoBehaviour
             {
                 detailText.text = GetDetailFromIndex(num) ?? "No Detail Available";
             }
+
+            Debug.Log($"DisplayNewsAndDetail: num = {num}, news = {newsText.text}, detail = {detailText.text}"); // デバッグロ
         }
         else
         {

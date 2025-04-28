@@ -67,8 +67,11 @@ public class DialogGeter : MonoBehaviour
                             {
                                 lines = lines,
                                 news = record.news,
-                                detail = record.detail // 新しいフィールドを追加
+                                detail = record.detail
                             };
+
+                            Debug.Log($"Index {i}: news = {record.news}, detail = {record.detail}"); // デバッグログを追加
+
                         }
                         else
                         {
@@ -138,6 +141,9 @@ public class DialogGeter : MonoBehaviour
                 {
                     dialogManager.dialogTable[i].news = dialogTable[i].news;
                     dialogManager.dialogTable[i].detail = dialogTable[i].detail;
+
+                    Debug.Log($"DialogManager Index {i}: news = {dialogManager.dialogTable[i].news}, detail = {dialogManager.dialogTable[i].detail}"); // デバッグログを追加
+
                 }
             }
         }
