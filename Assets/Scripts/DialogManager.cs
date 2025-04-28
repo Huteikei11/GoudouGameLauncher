@@ -27,6 +27,8 @@ public class DialogManager : MonoBehaviour
     {
         [TextArea(2, 5)]
         public List<string> lines = new List<string>();
+        public string news;   // 既存のフィールド
+        public string detail; // 新しいフィールド
     }
 
     public DialogSet[] dialogTable = new DialogSet[10];
@@ -121,5 +123,17 @@ public class DialogManager : MonoBehaviour
         {
             SetDialog(fixedDialogTable[index]);
         }
+    }
+
+    /// <summary>
+    /// 指定したインデックスの news を取得
+    /// </summary>
+    public string GetNewsFromIndex(int index)
+    {
+        if (index >= 0 && index < dialogTable.Length)
+        {
+            return dialogTable[index].news;
+        }
+        return null;
     }
 }
