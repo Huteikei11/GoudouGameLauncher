@@ -5,7 +5,6 @@ using UnityEngine;
 public class SelectButton : MonoBehaviour
 {
     public int gameNumber;
-    [SerializeField] private ObjectSwitcher objectSwitcher;
     [SerializeField] private DialogManager dialogManager;
     [SerializeField] private GameLauncherSystem GameLauncherSystem;
     // Start is called before the first frame update
@@ -23,7 +22,6 @@ public class SelectButton : MonoBehaviour
     public void Select(int num)
     {
         gameNumber = num;
-        objectSwitcher.SwitchObject(num);
         dialogManager.SetFixedDialog(num);
         GameLauncherSystem.SetLaunchIndex(num);
     }

@@ -8,6 +8,8 @@ public class DialogManager : MonoBehaviour
 {
     private int num;
     public TextMeshProUGUI dialogText;
+    public TextMeshProUGUI newsText;   // News 用の TextMeshProUGUI
+    public TextMeshProUGUI detailText; // Detail 用の TextMeshProUGUI
     public Animator animator;
     public AudioSource audioSource;
 
@@ -32,8 +34,7 @@ public class DialogManager : MonoBehaviour
     }
 
     public DialogSet[] dialogTable = new DialogSet[10];
-    [TextArea(2, 5)]
-    public string[] fixedDialogTable = new string[10];
+
 
     private void Awake()
     {
@@ -116,13 +117,19 @@ public class DialogManager : MonoBehaviour
         }
     }
 
-    public void SetFixedDialog(int index)
+    public void SetFixedDialog(int index)//最初に表示される
     {
         num = index;
-        if (index >= 0 && index < fixedDialogTable.Length)
+        if (index >= 0 && index < dialogTable.Length)
         {
-            SetDialog(fixedDialogTable[index]);
+            var lines = dialogTable[index].lines;
+            if (lines != null && lines.Count > 0)
+            {
+                string randomLine = lines[0];
+                SetDialog(randomLine);
+            }
         }
+        DisplayNewsAndDetail();
     }
 
     /// <summary>
@@ -136,4 +143,42 @@ public class DialogManager : MonoBehaviour
         }
         return null;
     }
+
+    /// <summary>
+    /// 指定したインデックスの detail を取得
+    /// </summary>
+    public string GetDetailFromIndex(int index)
+    {
+        if (index >= 0 && index < dialogTable.Length)
+        {
+            return dialogTable[index].detail;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// News と Detail を表示するメソッド
+    /// </summary>
+    public void DisplayNewsAndDetail()
+    {
+        if (num >= 0 && num < dialogTable.Length)
+        {
+            // News を表示
+            if (newsText != null)
+            {
+                newsText.text = GetNewsFromIndex(num) ?? "No News Available";
+            }
+
+            // Detail を表示
+            if (detailText != null)
+            {
+                detailText.text = GetDetailFromIndex(num) ?? "No Detail Available";
+            }
+        }
+        else
+        {
+            Debug.LogWarning("num の値が dialogTable の範囲外です。");
+        }
+    }
 }
+
