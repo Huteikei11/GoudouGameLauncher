@@ -106,7 +106,20 @@ public class DialogGeter : MonoBehaviour
             Debug.LogError("DialogManager が指定されていません！");
             return;
         }
-
+        // DialogManager の dialogTable をリセット
+        for (int i = 0; i < dialogManager.dialogTable.Length; i++)
+        {
+            if (dialogManager.dialogTable[i] == null)
+            {
+                dialogManager.dialogTable[i] = new DialogManager.DialogSet();
+            }
+            else
+            {
+                dialogManager.dialogTable[i].lines.Clear(); // lines をクリア
+                dialogManager.dialogTable[i].news = null;   // news をリセット
+                dialogManager.dialogTable[i].detail = null; // detail をリセット
+            }
+        }
         // dialogTable の各要素の lines0 から line10 を対応する dialogManager.dialogTable に追加
         for (int i = 0; i < dialogTable.Length; i++)
         {
