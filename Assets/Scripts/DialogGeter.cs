@@ -15,6 +15,9 @@ public class DialogGeter : MonoBehaviour
         public List<string> lines = new List<string>();
         public string news;   // 既存のフィールド
         public string detail; // 新しいフィールド
+        public string URL0;   // 新しいフィールド
+        public string URL1;   // 新しいフィールド
+        public string URL2;   // 新しいフィールド
     }
 
     public DialogManager dialogManager;
@@ -67,7 +70,10 @@ public class DialogGeter : MonoBehaviour
                             {
                                 lines = lines,
                                 news = record.news,
-                                detail = record.detail
+                                detail = record.detail,
+                                URL0 = record.URL0, 
+                                URL1 = record.URL1, 
+                                URL2 = record.URL2
                             };
 
                             Debug.Log($"Index {i}: news = {record.news}, detail = {record.detail}"); // デバッグログを追加
@@ -82,6 +88,7 @@ public class DialogGeter : MonoBehaviour
                     Debug.Log("dialogTable の更新が完了しました！");
 
                     ApplyToDialogManager();
+                    dialogManager.SetFixedDialog(0);
                 }
                 catch (System.Exception ex)
                 {
@@ -121,6 +128,9 @@ public class DialogGeter : MonoBehaviour
                 dialogManager.dialogTable[i].lines.Clear(); // lines をクリア
                 dialogManager.dialogTable[i].news = null;   // news をリセット
                 dialogManager.dialogTable[i].detail = null; // detail をリセット
+                dialogManager.dialogTable[i].URL0 = null; 
+                dialogManager.dialogTable[i].URL1 = null; 
+                dialogManager.dialogTable[i].URL2 = null;
             }
         }
         // dialogTable の各要素の lines0 から line10 を対応する dialogManager.dialogTable に追加
@@ -141,6 +151,9 @@ public class DialogGeter : MonoBehaviour
                 {
                     dialogManager.dialogTable[i].news = dialogTable[i].news;
                     dialogManager.dialogTable[i].detail = dialogTable[i].detail;
+                    dialogManager.dialogTable[i].URL0 = dialogTable[i].URL0;
+                    dialogManager.dialogTable[i].URL1 = dialogTable[i].URL1;
+                    dialogManager.dialogTable[i].URL2 = dialogTable[i].URL2;
 
                     Debug.Log($"DialogManager Index {i}: news = {dialogManager.dialogTable[i].news}, detail = {dialogManager.dialogTable[i].detail}"); // デバッグログを追加
 
@@ -167,6 +180,9 @@ public class DialogGeter : MonoBehaviour
         public string lines10; // 新しいフィールド
         public string news;   // 既存のフィールド
         public string detail; // 新しいフィールド
+        public string URL0;    // 新しいフィールド
+        public string URL1;    // 新しいフィールド
+        public string URL2;
     }
 
     [System.Serializable]

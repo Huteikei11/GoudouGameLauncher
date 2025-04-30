@@ -10,11 +10,14 @@ public class DialogManager : MonoBehaviour
     public TextMeshProUGUI dialogText;
     public TextMeshProUGUI newsText;   // News 用の TextMeshProUGUI
     public TextMeshProUGUI detailText; // Detail 用の TextMeshProUGUI
+    public ObjectSwitcher objectSwitcher;//紹介画像の切り替え用
     public Animator animator;
     public AudioSource audioSource;
+    public List<LinkButton> buttonlist = new List<LinkButton>();
 
     private int executionCount = 0; // 実行回数をカウントする変数
     private int previousNum = -1;  // 前回の num を記録する変数
+
 
     // 効果音クリップ名 → AudioClip の辞書（Inspectorで登録）
     [System.Serializable]
@@ -36,6 +39,9 @@ public class DialogManager : MonoBehaviour
         public string news;   // 既存のフィールド
         [TextArea(2, 5)]
         public string detail; // 新しいフィールド
+        public string URL0;
+        public string URL1;
+        public string URL2;
     }
 
     public DialogSet[] dialogTable = new DialogSet[10];
@@ -150,6 +156,8 @@ public class DialogManager : MonoBehaviour
             }
         }
         DisplayNewsAndDetail();
+        SetURL(index);
+        objectSwitcher.SwitchObject(index);
     }
 
     /// <summary>
@@ -202,5 +210,43 @@ public class DialogManager : MonoBehaviour
             Debug.LogWarning("num の値が dialogTable の範囲外です。");
         }
     }
-}
 
+    public void SetURL(int index)
+    {
+        if (index >= 0 && index < dialogTable.Length)
+        {
+            for(int urlIndex = 0; urlIndex < 3; urlIndex++)
+            {
+                string url = null;
+                switch (urlIndex)
+                {
+                    case 0:
+                        url = dialogTable[index].URL0;
+                        break;
+                    case 1:
+                        url = dialogTable[index].URL1;
+                        break;
+                    case 2:
+                        url = dialogTable[index].URL2;
+                        break;
+                }
+                if (!string.IsNullOrEmpty(url))//何かある
+                {
+                    LinkButton linkButton = buttonlist[urlIndex];
+                    linkButton.gameObject.SetActive(true);
+                    linkButton.SetURL(url);
+                }
+                else//何もない
+                {
+                    LinkButton linkButton = buttonlist[urlIndex];
+                    linkButton.SetURL(url);
+                    linkButton.gameObject.SetActive(false);
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("num の値が dialogTable の範囲外です。");
+        }
+    }
+}
