@@ -71,8 +71,9 @@ public class GameLauncherSystem : MonoBehaviour
         }
     }
 
-    public void SelectGamePath(int index)
+    public void SelectGamePath()
     {
+        int index = currentIndex;
         var extensions = new[] {
             new ExtensionFilter("実行可能ファイル", "exe")
         };
