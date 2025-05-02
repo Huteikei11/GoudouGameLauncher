@@ -9,6 +9,7 @@ public class GameLauncherSystem : MonoBehaviour
 {
     [SerializeField] private List<string> relativeGamePaths = new List<string>(10);
     public int currentIndex = 0;
+    [SerializeField] private GameObject targetButton2;
 
     public void SetLaunchIndex(int index)
     {
@@ -16,6 +17,8 @@ public class GameLauncherSystem : MonoBehaviour
         {
             currentIndex = index;
             UnityEngine.Debug.Log($"選択インデックス: {index}");
+
+            targetButton2.SetActive(currentIndex != 0);
         }
         else
         {
@@ -85,6 +88,9 @@ public class GameLauncherSystem : MonoBehaviour
             {
                 relativeGamePaths[index] = relativePath;
                 UnityEngine.Debug.Log($"相対パス設定 [{index}]: {relativeGamePaths[index]}");
+
+                // パスをセーブ
+                SaveRelativeGamePaths();
             }
             else
             {
@@ -99,5 +105,56 @@ public class GameLauncherSystem : MonoBehaviour
         Uri pathUri = new Uri(fullPath);
         Uri baseUri = new Uri(basePath + Path.DirectorySeparatorChar);
         return Uri.UnescapeDataString(baseUri.MakeRelativeUri(pathUri).ToString()).Replace('/', Path.DirectorySeparatorChar);
+    }
+
+    /// <summary>
+    /// relativeGamePathsをセーブする
+    /// </summary>
+    public void SaveRelativeGamePaths()
+    {
+        try
+        {
+            ES3.Save("relativeGamePaths", relativeGamePaths);
+            UnityEngine.Debug.Log("relativeGamePathsをセーブしました！");
+        }
+        catch (System.Exception ex)
+        {
+            UnityEngine.Debug.LogError("relativeGamePathsのセーブに失敗しました: " + ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// relativeGamePathsをロードする
+    /// </summary>
+    public void LoadRelativeGamePaths()
+    {
+        try
+        {
+            if (ES3.KeyExists("relativeGamePaths"))
+            {
+                relativeGamePaths = ES3.Load<List<string>>("relativeGamePaths");
+                UnityEngine.Debug.Log("relativeGamePathsをロードしました！");
+            }
+            else
+            {
+                UnityEngine.Debug.Log("保存されたrelativeGamePathsが見つかりませんでした。");
+            }
+        }
+        catch (System.Exception ex)
+        {
+            UnityEngine.Debug.LogError("relativeGamePathsのロードに失敗しました: " + ex.Message);
+        }
+    }
+
+    private void Start()
+    {
+        // ゲーム開始時にロード
+        LoadRelativeGamePaths();
+    }
+
+    private void OnApplicationQuit()
+    {
+        // ゲーム終了時にセーブ
+        SaveRelativeGamePaths();
     }
 }

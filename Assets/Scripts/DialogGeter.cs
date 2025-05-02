@@ -24,6 +24,9 @@ public class DialogGeter : MonoBehaviour
 
     private void Start()
     {
+        // スタート時にロードを試みる
+        LoadDialogTable();
+        ApplyToDialogManager();
         StartCoroutine(UpdateDialogTableFromSpreadsheet());
     }
 
@@ -87,6 +90,8 @@ public class DialogGeter : MonoBehaviour
 
                     Debug.Log("dialogTable の更新が完了しました！");
 
+                    // データをセーブ
+                    SaveDialogTable();
                     ApplyToDialogManager();
                     dialogManager.SetFixedDialog(0);
                 }
@@ -189,5 +194,44 @@ public class DialogGeter : MonoBehaviour
     private class RawDialogRecords
     {
         public RawDialogRecord[] records;
+    }
+
+    /// <summary>
+    /// dialogTableをセーブするメソッド
+    /// </summary>
+    public void SaveDialogTable()
+    {
+        try
+        {
+            ES3.Save("dialogTable", dialogTable);
+            Debug.Log("dialogTableをセーブしました！");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("dialogTableのセーブに失敗しました: " + ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// dialogTableをロードするメソッド
+    /// </summary>
+    public void LoadDialogTable()
+    {
+        try
+        {
+            if (ES3.KeyExists("dialogTable"))
+            {
+                dialogTable = ES3.Load<DialogSet[]>("dialogTable");
+                Debug.Log("dialogTableをロードしました！");
+            }
+            else
+            {
+                Debug.Log("保存されたdialogTableが見つかりませんでした。");
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("dialogTableのロードに失敗しました: " + ex.Message);
+        }
     }
 }
