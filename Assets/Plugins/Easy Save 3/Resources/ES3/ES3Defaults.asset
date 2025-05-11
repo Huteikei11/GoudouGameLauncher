@@ -18,7 +18,7 @@ MonoBehaviour:
     encryptionType: 0
     compressionType: 0
     encryptionPassword: password
-    directory: 0
+    directory: 1
     format: 0
     prettyPrint: 1
     bufferSize: 2048
