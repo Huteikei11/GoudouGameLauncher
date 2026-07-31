@@ -64,6 +64,12 @@ public class GameLauncherSystem : MonoBehaviour
                 UseShellExecute = true
             });
             UnityEngine.Debug.Log($"起動成功: {fullPath}");
+
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;//ゲームプレイ終了
+#else
+    Application.Quit();//ゲームプレイ終了
+#endif
         }
         catch (System.Exception e)
         {
